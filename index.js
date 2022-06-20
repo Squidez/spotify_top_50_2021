@@ -17,6 +17,8 @@ d3.csv('spotify_top_2021.csv', function(d) {
 }, function(d) {
 
     console.log(d);
+
+    let global_data = d;
     
     // list that contains rank of each song on te graph
     let on_graph = [];
@@ -44,6 +46,22 @@ d3.csv('spotify_top_2021.csv', function(d) {
        
     };
 
+    // creates a select option for each song in the dataset
+    let select = document.getElementById('select_song');
+    for (let i = 0; i< d.length; i++){
+        
+        let option = document.createElement('option');
+        let artist = d[i].artist;
+        let title = d[i].title;
+        
+        // id as option value
+        option.value = i;
+        // title and artit as option label
+        option.innerHTML = `${title} - ${artist}`;
+        
+        select.appendChild(option);
+        }
+
     // creates a color list
     let colors = [];
     for (let i = 0 ; i < d.length + 1; i++) {
@@ -68,7 +86,7 @@ d3.csv('spotify_top_2021.csv', function(d) {
 
     // create x axis with only multiple of 10 shown
     let x_axis = d3.axisBottom(x_scale)
-        .tickValues(x_scale.domain().filter(function(i){ return !(i%10)}));
+        .tickValues(x_scale.domain().filter(function(i){ return !(i%5)}));
 
     svg_color.append('g')
         .attr('transform', 'translate(0,70)')
@@ -76,8 +94,26 @@ d3.csv('spotify_top_2021.csv', function(d) {
 
     let colorScale = d3.scaleOrdinal()
         .domain(domain)
-        .range(colors)
-    
+        .range(colors);
+
+    let tooltip = d3.select('#rank_color')
+        .append('div')
+        .style("opacity", 0)
+        .attr("class", "tooltip")
+        .style("background-color", "white")
+        .style("border", "solid")
+        .style("border-width", "2px")
+        .style("border-radius", "3px")
+        .style("padding", "3px");
+
+
+    let mouseleave = function(d) {
+        tooltip.style("opacity", 0)
+        d3.select(this)
+            .style("stroke", "none")
+            .style("opacity", 0.8)
+    }
+
     svg_color.selectAll('rect')
         .data(domain)
         .enter()
@@ -87,22 +123,16 @@ d3.csv('spotify_top_2021.csv', function(d) {
         .attr('width', 10)
         .attr('height', 30)
         .attr('fill', (d) => colorScale(d))
-
-    // creates a select option for each song in the dataset
-    let select = document.getElementById('select_song');
-    for (let i = 0; i< d.length; i++){
-        
-        let option = document.createElement('option');
-        let artist = d[i].artist;
-        let title = d[i].title;
-        
-        // id as option value
-        option.value = i;
-        // title and artit as option label
-        option.innerHTML = `${title} - ${artist}`;
-        
-        select.appendChild(option);
-        }
+        .on('mouseover', function(){
+            tooltip.style("opacity", 1);
+            d3.select(this).style("stroke", "black").style("opacity", 1)
+            })
+        .on('mousemove', function(d){
+            tooltip.html(d+' - '+global_data[d-1].title+' - '+global_data[d-1].artist)
+                .style("left", (d3.mouse(this)[0] + 20) + "px")
+                .style("top", (d3.mouse(this)[1] + 30) + "px")
+            })
+        .on('mouseleave', mouseleave);
 
     // add the selected song to the graph
     let song = document.querySelector('#select_song')
