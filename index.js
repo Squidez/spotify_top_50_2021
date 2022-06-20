@@ -18,7 +18,7 @@ d3.csv('spotify_top_2021.csv', function(d) {
 
     console.log(d);
 
-    let global_data = d;
+    let data = d;
     
     // list that contains rank of each song on te graph
     let on_graph = [];
@@ -30,7 +30,7 @@ d3.csv('spotify_top_2021.csv', function(d) {
         if (on_graph.includes(+index) == false) {
             // adds song to the graph
             svg_radar.append("path")
-               .datum(getPathCoordinates(d[index]))
+               .datum(getPathCoordinates(data[index]))
                .attr("d",line)
                .attr("stroke-width", 3)
                .attr("stroke", colors[index])
@@ -51,8 +51,8 @@ d3.csv('spotify_top_2021.csv', function(d) {
     for (let i = 0; i< d.length; i++){
         
         let option = document.createElement('option');
-        let artist = d[i].artist;
-        let title = d[i].title;
+        let artist = data[i].artist;
+        let title = data[i].title;
         
         // id as option value
         option.value = i;
@@ -64,7 +64,7 @@ d3.csv('spotify_top_2021.csv', function(d) {
 
     // creates a color list
     let colors = [];
-    for (let i = 0 ; i < d.length + 1; i++) {
+    for (let i = 0 ; i < data.length + 1; i++) {
         // gets color from a colormap
         let rgb_color = viridis_r(i/d.length); // returns a list
 
@@ -78,7 +78,7 @@ d3.csv('spotify_top_2021.csv', function(d) {
         .attr('height', 200);
 
     // creates a domain with the ranks
-    let domain = d3.range(1,d.length+1,1);
+    let domain = d3.range(1,data.length+1,1);
         
     let x_scale = d3.scaleBand()
         .domain(domain)
@@ -100,19 +100,11 @@ d3.csv('spotify_top_2021.csv', function(d) {
         .append('div')
         .style("opacity", 0)
         .attr("class", "tooltip")
-        .style("background-color", "white")
+        .style("background-color", "#ffffff")
         .style("border", "solid")
         .style("border-width", "2px")
         .style("border-radius", "3px")
         .style("padding", "3px");
-
-
-    let mouseleave = function(d) {
-        tooltip.style("opacity", 0)
-        d3.select(this)
-            .style("stroke", "none")
-            .style("opacity", 0.8)
-    }
 
     svg_color.selectAll('rect')
         .data(domain)
@@ -125,14 +117,20 @@ d3.csv('spotify_top_2021.csv', function(d) {
         .attr('fill', (d) => colorScale(d))
         .on('mouseover', function(){
             tooltip.style("opacity", 1);
-            d3.select(this).style("stroke", "black").style("opacity", 1)
+            d3.select(this).style("stroke", "black").style("opacity", 1);
             })
         .on('mousemove', function(d){
-            tooltip.html(d+' - '+global_data[d-1].title+' - '+global_data[d-1].artist)
-                .style("left", (d3.mouse(this)[0] + 20) + "px")
-                .style("top", (d3.mouse(this)[1] + 30) + "px")
+            tooltip.html(d+' - '+data[d-1].title+' - '+data[d-1].artist)
+                .style("left", (d3.mouse(this)[0]) + "px")
+                .style("top", (d3.mouse(this)[1]) + "px");
             })
-        .on('mouseleave', mouseleave);
+        .on('mouseleave', function(){
+            tooltip.style("opacity", 0);
+            d3.select(this).style("stroke", "none").style("opacity", 0.8)
+            })
+        .on('click', function(d){
+                add_to_graph(d);
+            });    
 
     // add the selected song to the graph
     let song = document.querySelector('#select_song')
@@ -161,7 +159,7 @@ d3.csv('spotify_top_2021.csv', function(d) {
         d3.selectAll('path').remove();
         on_graph.length = 0;
         // show all songs and add them to the list
-        for (let i=0; i<d.length;i++){
+        for (let i=0; i<data.length;i++){
             add_to_graph(i);
         };
         song.value = 'home'
@@ -173,8 +171,8 @@ d3.csv('spotify_top_2021.csv', function(d) {
 let features = ["energy", "danceability", "valence", "acousticness", "popularity"]
 
 let svg_radar = d3.select("#radar_chart").append("svg")
-    .attr("width", 800)
-    .attr("height", 800);
+    .attr("width", 600)
+    .attr("height", 600);
 
 let radialScale = d3.scaleLinear()
     .domain([0,1])
