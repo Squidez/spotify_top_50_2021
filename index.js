@@ -66,7 +66,7 @@ d3.csv('spotify_top_2021.csv', function(d) {
     let colors = [];
     for (let i = 0 ; i < data.length + 1; i++) {
         // gets color from a colormap
-        let rgb_color = viridis_r(i/d.length); // returns a list
+        let rgb_color = plasma(i/d.length); // returns a list
 
         // transforms the list to a rgb() format
         let color = `rgb(${rgb_color[0]},${rgb_color[1]},${rgb_color[2]})`;
@@ -115,6 +115,7 @@ d3.csv('spotify_top_2021.csv', function(d) {
         .attr('width', 10)
         .attr('height', 30)
         .attr('fill', (d) => colorScale(d))
+        .style('opacity', 0.8)
         .on('mouseover', function(){
             tooltip.style("opacity", 1);
             d3.select(this).style("stroke", "black").style("opacity", 1);
@@ -126,7 +127,7 @@ d3.csv('spotify_top_2021.csv', function(d) {
             })
         .on('mouseleave', function(){
             tooltip.style("opacity", 0);
-            d3.select(this).style("stroke", "none").style("opacity", 0.8)
+            d3.select(this).style("stroke", "none").style('opacity',0.8)
             })
         .on('click', function(d){
                 add_to_graph(d-1);
@@ -147,6 +148,7 @@ d3.csv('spotify_top_2021.csv', function(d) {
 
     // clears the graph
     document.querySelector('#btn_clear').addEventListener('click', function() {
+        // clear the graph and list
         d3.selectAll('path').remove();
         on_graph.length = 0;
         song.value = 'home'
@@ -155,12 +157,12 @@ d3.csv('spotify_top_2021.csv', function(d) {
 
     // shows all the songs on the graph
     document.querySelector('#btn_show').addEventListener('click', function() {
-        // clear the graph and list
-        d3.selectAll('path').remove();
-        on_graph.length = 0;
+
         // show all songs and add them to the list
         for (let i=0; i<data.length;i++){
-            add_to_graph(i);
+            if (on_graph.includes(i) == false ) {
+                add_to_graph(i);
+            } 
         };
         song.value = 'home'
         console.log('all songs added to the graph');
@@ -168,15 +170,16 @@ d3.csv('spotify_top_2021.csv', function(d) {
 
 });
 
+// axes of the radar chart
 let features = ["energy", "danceability", "valence", "acousticness", "popularity"]
 
 let svg_radar = d3.select("#radar_chart").append("svg")
-    .attr("width", 600)
-    .attr("height", 600);
+    .attr("width", 800)
+    .attr("height", 800);
 
 let radialScale = d3.scaleLinear()
     .domain([0,1])
-    .range([0,250]);
+    .range([0,275]);
 let ticks = [0.2,0.4,0.6,0.8,1];
 
 ticks.forEach(t =>
