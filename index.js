@@ -129,7 +129,7 @@ d3.csv('spotify_top_2021.csv', function(d) {
             d3.select(this).style("stroke", "none").style("opacity", 0.8)
             })
         .on('click', function(d){
-                add_to_graph(d);
+                add_to_graph(d-1);
             });    
 
     // add the selected song to the graph
