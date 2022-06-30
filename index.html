@@ -12,8 +12,7 @@
 </head>
 <body>
 
-    <!-- <div class="container-fluid" id="cor_plot"></div> -->
-    <div class="row">
+    <div class="row" style="margin-left: 5px; margin-top: 5px;">
         <div class="col-lg">
             <select class="form-select" id="select_song">
                 <option value="home" selected>Add songs to the graph</option>
@@ -26,16 +25,15 @@
       </div>
     <div class="container-fluid" id="rank_color"></div>
     <div class="container-fluid" id="radar_chart"></div>
-    <div class = 'row'>
-    <div id = "cor_select">
-        <div class="col-lg">
-            <select class="form-select-sm" id="select_param1"></select>
-            <select class="form-select-sm" id="select_param2"></select>
-            <button type="button" class="btn btn-outline-primary" id="btn_cor">Confirm</button>
+    <div class = 'row' style="margin-left: 5px">
+        <div id = "cor_select">
+            <div class="col-lg">
+                <select class="form-select-sm" id="select_param1"></select>
+                <select class="form-select-sm" id="select_param2"></select>
+            </div>
         </div>
     </div>
-    </div>
-    <div id="cor_plot"></div>
+    <div class="container-fluid" id="cor_plot"></div>
 
 
     <!-- Import d3 -->
@@ -43,8 +41,7 @@
     <!-- Import js-colormaps from github.com/timothygebhard/js-colormaps -->
     <script src="js-colormaps.js"></script>
 
-    <script src='radar.js'></script>
-    <script src="scatter.js"></script>
+    <script type="text/javascript" src="index.js"></script>
     
 </body>
 </html>
