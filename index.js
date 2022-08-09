@@ -25,24 +25,11 @@ d3.csv('spotify_top_2021.csv', function(d) {
 
     // Retrieve and declare the correlation matrix
     d3.csv('spotify_cor.csv', function(c) {
-
-        return {
-          bpm: +c.bpm,
-          energy: +c.nrgy,
-          danceability: +c.dnce,
-          decibel: +c.db,
-          valence: +c.val,
-          duration: +c.dur,
-          acousticness: +c.acous,
-          popularity: +c.pop
-        };
-    
-      }, function(c) {
-
+        
         scatter_plot(d,c)
-      });
+        cor_matrix(c,d)
+      })
 });
-
 
 // Declaration of the height, width, etc...
 let margin = {top: 10, right: 30, bottom: 30, left: 60},
@@ -65,13 +52,13 @@ function manage_colors(d) {
     // Populates the list with the color and puts the in rgb() format
     for (let i = 0 ; i < d.length + 1; i++) {
         // gets color from a colormap
-        let rgb_color = plasma(i/d.length); // returns a list
+        let rgb_color = viridis(i/d.length); // returns a list
 
         // transforms the list to a rgb() format
         let color = `rgb(${rgb_color[0]},${rgb_color[1]},${rgb_color[2]})`;
         colors.push(color);
       }
-      
+
     // Creates a domain with the ranks
     let domain = d3.range(1,d.length+1,1);
     let colorScale = d3.scaleOrdinal()
@@ -85,8 +72,8 @@ function color_graph(d) {
     
     // Creates the color diagram
     let svg_color = d3.select('#rank_color').append('svg')
-        .attr('width', 800)
-        .attr('height', 200);
+        .attr('width', width + margin.left + margin.right)
+        .attr('height', (height +margin.top+margin.bottom)/4);
 
     // Retrieves the domain and colorScale
     let domain = manage_colors(d).domain;
@@ -95,7 +82,7 @@ function color_graph(d) {
     // Declaration of the x axis
     let x_scale = d3.scaleBand()
         .domain(domain)
-        .range([20,680]);
+        .range([7, width+margin.right+margin.right]);
 
     // Creates an x axis with only multiple of 10 shown
     let x_axis = d3.axisBottom(x_scale)
@@ -105,6 +92,14 @@ function color_graph(d) {
     svg_color.append('g')
         .attr('transform', 'translate(0,70)')
         .call(x_axis);
+    
+    // Adds a title to the graph
+    svg_color.append("text")
+        .attr("x",  7)             
+        .attr("y", margin.top + 20)
+        .attr("text-anchor", "left")  
+        .style("font-size", "16px")
+        .text("Song color according to its position :");
     
     // Declaration of the tooltip
     let tooltip = d3.select('#rank_color')
@@ -129,18 +124,18 @@ function color_graph(d) {
         .attr('fill', (c) => colorScale(c))
         .style('opacity', 0.8)
         .on('mouseover', function(){
-            // Changes style/shows the tooltip when the mouse hovers a point
+            // Changes style/shows the tooltip when the mouse hovers a bar
             tooltip.style('opacity', 1);
             d3.select(this).style('stroke', 'black').style('opacity', 1);
             })
         .on('mousemove', function(c){
-            // Shows the title and author when the mouse hovers a point
+            // Shows the title and author when the mouse hovers a bar
             tooltip.html(`${c} - ${d[c-1].title} - ${d[c-1].artist}`)
                 .style('left', d3.event.pageX + 10 + 'px')
                 .style('top', d3.event.pageY - 20 + 'px');
             })
         .on('mouseleave', function(){
-            // Hides the tooltip and puts initial style to the point
+            // Hides the tooltip and puts initial style to the bar
             tooltip.style('opacity', 0);
             d3.select(this).style('stroke', 'none').style('opacity',0.8);
             })
@@ -156,8 +151,8 @@ function color_graph(d) {
 
 // Creates the svg for the graph
 let svg_radar = d3.select('#radar_chart').append('svg')
-    .attr('width', 800)
-    .attr('height', 800);
+    .attr('width', width + margin.left + margin.right)
+    .attr('height', height + margin.top + margin.bottom);
 
 // Creates a radial scale for the radar chart
 let radialScale = d3.scaleLinear()
@@ -238,17 +233,17 @@ let line = d3.line()
 // Gives the coordinate of a datapoint
 function getPathCoordinates(data_point){
 
-// Declaration of a list for the coordinates
-let coordinates = [];
-// Gets the coordinates for each feature
-for (var i = 0; i < features.length; i++){
-
-    let angle = (Math.PI / 2) + (2 * Math.PI * i / features.length);
-    coordinates.push(angleToCoordinate(angle, data_point[features[i]]));
+    // Declaration of a list for the coordinates
+    let coordinates = [];
+    // Gets the coordinates for each feature
+    for (var i = 0; i < features.length; i++){
+    
+        let angle = (Math.PI / 2) + (2 * Math.PI * i / features.length);
+        coordinates.push(angleToCoordinate(angle, data_point[features[i]]));
+        }
+    
+    return coordinates;
     }
-
-return coordinates;
-}
 
 
 // List that contains rank of each song on te graph
@@ -364,7 +359,7 @@ function scatter_plot(d,c) {
     let colorScale = manage_colors(d).colorScale;
 
     // Creates the svg for the scatter plot
-    let scat_svg = d3.select('#cor_plot')
+    let scat_svg = d3.select('#scat_plot')
         .append('svg')
         .attr('width', width + margin.left + margin.right)
         .attr('height', height + margin.top + margin.bottom)
@@ -399,24 +394,24 @@ function scatter_plot(d,c) {
 
     document.querySelector('#select_param2').addEventListener('change', function(){
         draw_points()
-      });
+        });
 
     // Label for the correlation line
     scat_svg.append('rect')
-      .attr('x', x(0.05)-15)
-      .attr('y', y(0.95)-20)
-      .attr('height', 10)
-      .attr('width', 10)
-      .attr('fill', colorScale(25));
+        .attr('x', x(0.05)-15)
+        .attr('y', y(0.95)-20)
+        .attr('height', 10)
+        .attr('width', 10)
+        .attr('fill', colorScale(15));
     
     scat_svg.append('text')
-      .attr('x', x(0.05))
-      .attr('y', y(0.95)-11)
-      .text('correlation')
-      .attr('fill', colorScale(25));
+        .attr('id', 'cor_label')
+        .attr('x', x(0.05))
+        .attr('y', y(0.95)-11)
+        .attr('fill', colorScale(15))
 
     // Declaration of the tooltip for the scatterplot
-    let scat_tooltip = d3.select('#cor_plot')
+    let scat_tooltip = d3.select('#scat_plot')
         .append('div')
         .style('opacity', 0)
         .attr('class', 'tooltip')
@@ -439,20 +434,33 @@ function scatter_plot(d,c) {
         scat_svg.selectAll('#cor_line').remove();
 
         // Matches the features with it's id in the correlation csv
-        let cor_index = {energy: 1, danceability: 2, valence: 4, acousticness: 6, popularity: 7};
-        let cor = c[cor_index[param1]][`${param2}`];
+        let cor_index = {energy: 1, danceability: 2, valence: 4,
+                         acousticness: 6, popularity: 7};
+        // Gets the correlation value between the two features
+        let cor_value = c[cor_index[`${param1}`]][`${param2}`];
+        
+        // Dosen't show the line if the correlation is negative
+        let cor_opacity = 0.9;
+        if (cor_value<0) {
+            cor_opacity = 0;
+        }
 
         // Draws a line with the correlation value
         scat_svg.append('line')
             .datum(c)
-            .style("stroke", colorScale(25))
-            .style('opacity', 0.9)
+            .style("stroke", colorScale(15))
+            .style('opacity', cor_opacity)
             .style('stroke-width', 2)
             .attr('id', 'cor_line')
             .attr('x1', x(0))
             .attr('y1', y(0))
             .attr('x2', x(1))
-            .attr('y2', function(c) {return y(cor)});
+            .attr('y2', function(c) {return y(cor_value)});
+
+        // Updates the label text with the correlation value
+        scat_svg.select('#cor_label')
+            .text(`correlation=${parseFloat(cor_value).toFixed(2)}`) 
+
 
         // Creates à point for each song
         scat_svg.append('g')
@@ -460,8 +468,8 @@ function scatter_plot(d,c) {
             .data(d)
             .enter()
             .append('circle')
-            .attr('cx', function (d) { return x(d[`${param1}`]); } )
-            .attr('cy', function (d) { return y(d[`${param2}`]); } )
+            .attr('cx', function (d) { return x(+d[`${param1}`]); } )
+            .attr('cy', function (d) { return y(+d[`${param2}`]); } )
             .attr('r', 5)
             .style('fill', function (d) { return colorScale(d.rank)})
             .style('opacity', 0.8)
@@ -504,3 +512,113 @@ function scatter_plot(d,c) {
     // Calls the function to show points launch
     draw_points();
 };
+
+/* ----- CORRELATION MATRIX ----- 
+
+  A correlation matrix with the diffirent features. */
+
+function cor_matrix(c,d) {
+
+    // Creates svg for the graph
+    let cor_svg = d3.select('#cor_matrix')
+        .append('svg')
+        .attr('width', width+margin.left+margin.right)
+        .attr('height', height+margin.top+margin.bottom)
+        .append('g')
+        .attr('transform', `translate(${margin.left},${margin.right})`);
+    console.log(c)
+    
+    // Transforms the data to have an object for each feature couple
+    let matrix_data = [];
+    c.forEach(function(c){
+        let x = c[''];
+        delete c[''];
+        for (prop in c) {
+            let y = prop,
+                value = c[prop];
+            
+            matrix_data.push({x:x, y:y, value: +value});
+        }
+    });
+    
+    let domain = d3.set(matrix_data.map(function(c) {return c.x})).values();
+
+    // Declaration of colorScale
+    let colorScale = manage_colors(d).colorScale;
+
+    // Creates a color scale using the colors of the "global" one
+    let color = d3.scaleLinear()
+        .domain([-1,0,1])
+        .range([colorScale(1),colorScale(25),colorScale(50)])
+    
+    // Scale for the size of the bubble
+    let size = d3.scaleSqrt()
+        .domain([0,1])
+        .range([0,9]);
+    
+    // X scale
+    let x = d3.scalePoint()
+        .domain(domain)
+        .range([0,width]);
+
+    // Y scale
+    let y = d3.scalePoint()
+        .domain(domain)
+        .range([0, height])
+    
+    // Adds elements to the graph
+    let cor = cor_svg.selectAll('.cor')
+        .data(matrix_data)
+        .enter()
+        .append('g')
+        .attr('class', 'cor')
+        .attr('transform', function(c){
+            return `translate(${x(c.x)},${y(c.y)})`
+            });
+    
+    // Select the "bottom" half of the graph
+    cor.filter(function(c){
+
+        let ypos = domain.indexOf(c.y);
+        let xpos = domain.indexOf(c.x);
+        return xpos <= ypos;
+        })
+        .append('text')
+        .attr('y', 5)
+        .text(function(c) {
+            // display the feature text
+            if (c.x === c.y) {
+                
+                let text = c.x;
+                if (text.length > 8) {
+                    text = `${text.slice(0,6)}.`;
+                }
+
+                return text;
+            } else {
+            // display the correlation value
+                return c.value.toFixed(2);
+            }
+          })
+        .style('font-size', 11)
+        .style('text-align', 'center')
+        .style('fill', function(c) {
+                if (c.x === c.y){
+                    return '#0a0a0a'
+                } else {
+                    return color(c.value)}
+                }); 
+    
+    // Select the "top" half of the graph
+    cor.filter(function(c){ 
+
+        let ypos = domain.indexOf(c.y);
+        let xpos = domain.indexOf(c.x);
+        return xpos > ypos;
+        })
+        // display the bubbles
+        .append('circle')
+        .attr('r', function(c) {return size(Math.abs(c.value))})
+        .style('fill', function(c) {return color(c.value)})
+        .style('opacity', 0.8);   
+}

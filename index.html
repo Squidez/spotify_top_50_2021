@@ -8,23 +8,59 @@
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
 
-    <title>Spotify Analysis</title>
+    <title>Spotify top 50 of 2021 </title>
 </head>
 <body>
+    
+    <p class="text-center text-uppercase fs-1 fw-bold" 
+        style="background-color: #1DB954; color: white; margin-bottom: 0%;">
+        Spotify top 50 of 2021
+    </p>
 
+    <!-- <button type="button" class="btn_collapse" onclick=collapse()>Usage & Information</button> -->
+    <div class="content" id="info">
+        <h6>General Information :</h6>
+        <div>
+    This site shows some data visualisation of the 50 most streamed song on Spotify in 2021.<br>
+    It's aim is to show the relation between several properties Spotify gives to each song.<br>
+    The data was extracted using <a href="http://organizeyourmusic.playlistmachinery.com/#">Organize Your Music</a>.
+        </div>
+        <h6>Data description :</h6>
+        <ul>
+            <li><b>rank</b> : position of the song in the top 50</li>
+            <li><b>title</b> : title of the song</li>
+            <li><b>artist</b> : artist of the song</li>
+            <li><b>genre</b> : music genre of the song</li>
+            <li><b>year</b> : realease year of the song</li>
+            <li><b>bpm</b> : tempo in beats per minute</li>
+            <li><b>energy</b> : mesure, from 0 to 1, of intencity and activity</li>
+            <li><b>danceability</b> : mesure, from 0 to 1, of how suitable track is for dancing</li>
+            <li><b>decibel</b> : average loudness of the track, from -60 to 0 db</li>
+            <li><b>valence</b> : mesure, from 0 to 1, of the positivity conveyed by the track</li>
+            <li><b>duration</b> : duration of the track in ms</li>
+            <li><b>acousticness</b> : confidence measure from 0 to 1 of whether the track is acoustic </li>
+            <li><b>popularity</b> : mesure, from 0 to 1, of the popularity of the track</li>
+        </ul>
+        <p>Detailled information about th data can be found <a href="https://developer.spotify.com/documentation/web-api/reference/#/operations/get-several-audio-features">here</a>.
+        </p>
+    </div>
+
+    <h2>Radar Chart:</h2>
+    <p class="content">Use the select option or the color scale to add songs to the graph</p>
     <div class="row" style="margin-left: 5px; margin-top: 5px;">
         <div class="col-lg">
             <select class="form-select" id="select_song">
                 <option value="home" selected>Add songs to the graph</option>
             </select>
         </div>
-        <div class="col-sm">
+        <div class="col-lg">
             <button type="button" class="btn btn-outline-primary" id="btn_show">Show all songs</button>
             <button type="button" class="btn btn-outline-danger" id="btn_clear">Clear graph</button>
         </div>
       </div>
     <div class="container-fluid" id="rank_color"></div>
     <div class="container-fluid" id="radar_chart"></div>
+    <h2>Scatter Plot:</h2>
     <div class = 'row' style="margin-left: 5px">
         <div id = "cor_select">
             <div class="col-lg">
@@ -33,8 +69,61 @@
             </div>
         </div>
     </div>
-    <div class="container-fluid" id="cor_plot"></div>
+    <div class="container-fluid" id="scat_plot"></div>
+    <h2>Correlation Matrix:</h2>
+    <div class="container-fluid" id="cor_matrix"></div>
 
+    <style>
+
+        .content {
+            padding: 0 18px;
+            margin-left: 7px;
+            margin-right: 7px;
+            display: block;
+            overflow: auto;
+            background-color:  #ffffff;
+            opacity: 1;
+        }
+
+        h6 {
+            /* padding: 7px; */
+            margin-bottom: 10px;
+            margin-top: 15px;
+            text-decoration: underline;
+        }
+
+        h2 {
+            font-size: 20px;
+            text-decoration: underline;
+            /* padding: 0 7px;
+            margin-left: 7px; */
+            padding: 0 18px;
+            margin-left: 7px;
+            margin-right: 7px;
+            margin-bottom: 10px;
+            margin-top: 25px;
+            display: block;
+            overflow: auto;
+            background-color:  #ffffff;
+            opacity: 1;
+        }
+    </style>
+
+    <script>
+
+        // function that shows/hides the information panel
+        function collapse() {
+
+            info = document.getElementById('info')
+            
+            if (info.style.display === "block") {
+                info.style.display = "none";
+            } else {
+                info.style.display = "block"
+            }
+            
+        }
+    </script>
 
     <!-- Import d3 -->
     <script src="https://d3js.org/d3.v4.min.js"></script>
