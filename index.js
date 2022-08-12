@@ -127,6 +127,7 @@ function color_graph(d) {
             // Changes style/shows the tooltip when the mouse hovers a bar
             tooltip.style('opacity', 1);
             d3.select(this).style('stroke', 'black').style('opacity', 1);
+            d3.select(this).style('cursor', 'pointer');
             })
         .on('mousemove', function(c){
             // Shows the title and author when the mouse hovers a bar
@@ -576,7 +577,7 @@ function cor_matrix(c,d) {
             return `translate(${x(c.x)},${y(c.y)})`
             });
     
-    // Select the "bottom" half of the graph
+    // Select the bottom left half of the graph
     cor.filter(function(c){
 
         let ypos = domain.indexOf(c.y);
@@ -609,7 +610,7 @@ function cor_matrix(c,d) {
                     return color(c.value)}
                 }); 
     
-    // Select the "top" half of the graph
+    // Select the top right half of the graph
     cor.filter(function(c){ 
 
         let ypos = domain.indexOf(c.y);
