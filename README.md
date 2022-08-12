@@ -21,21 +21,21 @@ The website consist of three different visualisation:
 The data was extracted using [Organize Your Music](http://organizeyourmusic.playlistmachinery.com/#).
 The correlation matrix was done using R. 
 
-    * rank : position of the song in the top 50
-    * title : title of the song
-    * artist : artist of the song
-    * genre : music genre of the song
-    * year : realease year of the song
-    * bpm : tempo in beats per minute
-    * energy : mesure, from 0 to 1, of intencity and * activity
-    * danceability : mesure, from 0 to 1, of how * suitable track is for dancing
-    * decibel : average loudness of the track, from * -60 to 0 db
-    * valence : mesure, from 0 to 1, of the * positivity conveyed by the track
-    * duration : duration of the track in ms
-    * acousticness : confidence measure from 0 to 1 * of whether the track is acoustic
-    * popularity : mesure, from 0 to 1, of the * popularity of the track
+* rank : position of the song in the top 50
+* title : title of the song
+* artist : artist of the song
+* genre : music genre of the song
+* year : realease year of the song
+* bpm : tempo in beats per minute
+* energy : mesure, from 0 to 1, of intencity and * activity
+* danceability : mesure, from 0 to 1, of how * suitable track is for dancing
+* decibel : average loudness of the track, from * -60 to 0 db
+* valence : mesure, from 0 to 1, of the * positivity conveyed by the track
+* duration : duration of the track in ms
+* acousticness : confidence measure from 0 to 1 * of whether the track is acoustic
+* popularity : mesure, from 0 to 1, of the * popularity of the track
 
-Detailled information about these properties can be found [on Spotify's api documentation](https://developer.spotify.com/documentation/web-api/reference/#/operations/get-several-audio-features). 
+Detailled information about these properties can be found [on Spotify's API documentation](https://developer.spotify.com/documentation/web-api/reference/#/operations/get-several-audio-features). 
 
 
 ## Installation requirements
