@@ -5,10 +5,10 @@ This project was made for the class _Visualisation de données_ given by Isaac P
 
 The main objective was to generate a data visualisation using the D3.js Library.
 
-This project focuses on Spotify's most streamed titles of 2021. It tries to show the realtion between several properties Spotify gives each song and to see if they are correlated. It also allows the user to compare the songs and their properties. 
+This project focuses on Spotify's most streamed titles of 2021. It tries to show the realtion between several properties Spotify gives each song and to see if they are correlated. It also allows the users to compare the songs and their properties. 
 
 The website consist of three different visualisation:
-1. An interactive radar chart where the user chooses the songs he want's to compare.
+1. An interactive radar chart, showing the amount of each propertie, where the user chooses the songs he want's to compare.
 ![The radar chart](https://github.com/Squidez/spotify_top_50_2021/blob/main/Readme%20Img/radar_chart.PNG)
 
 2. A scatter plot, showing every song according to two chosen properties.
@@ -19,7 +19,7 @@ The website consist of three different visualisation:
 
 ## Data
 The data was extracted using [Organize Your Music](http://organizeyourmusic.playlistmachinery.com/#).
-The correlation matrix was done using R. 
+The correlation matrix was done using R.
 
 * rank : position of the song in the top 50
 * title : title of the song
@@ -37,13 +37,19 @@ The correlation matrix was done using R.
 
 Detailled information about these properties can be found [on Spotify's API documentation](https://developer.spotify.com/documentation/web-api/reference/#/operations/get-several-audio-features). 
 
-
 ## Installation requirements
-The website is live : https://squidez.github.io/spotify_top_50_2021/
-
+The website is  either live at https://squidez.github.io/spotify_top_50_2021/ or you can clone the project and excecute _index.html_.
  
-## Dependancies
+## Ressource and Packages
 
-## Technical difficulties
+The project uses these packages:
+* d3.js : https://d3js.org/d3.v4.min.js
+* js-colormaps : github.com/timothygebhard/js-colormaps
+* Bootstrap : https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css
 
-## Conclusions
+The graph are inspired by:
+* https://yangdanny97.github.io/blog/2019/03/01/D3-Spider-Chart
+* https://d3-graph-gallery.com/graph/scatter_tooltip.html
+* https://d3-graph-gallery.com/graph/correlogram_basic.html
+
+## Conclusion 

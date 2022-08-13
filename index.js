@@ -137,7 +137,9 @@ function color_graph(d) {
             })
         .on('mouseleave', function(){
             // Hides the tooltip and puts initial style to the bar
-            tooltip.style('opacity', 0);
+            tooltip.style('opacity', 0)
+                // Moves the tooltip away from the graph to avoid it to block the elements underneath 
+                .style('left', d3.event.pageX + 1000 + 'px');
             d3.select(this).style('stroke', 'none').style('opacity',0.8);
             })
         .on('click', function(c){
@@ -254,6 +256,22 @@ function radar_chart(d) {
 
     let colors = manage_colors(d).colors;
 
+    // creates a select option for each song in the dataset
+    let select = document.getElementById('select_song');
+    for (let i = 0; i< d.length; i++){
+        
+        let option = document.createElement('option');
+        let artist = d[i].artist;
+        let title = d[i].title;
+        
+        // id as option value
+        option.value = i;
+        // title and artit as option label
+        option.innerHTML = `${title} - ${artist}`;
+        
+        select.appendChild(option);
+        }
+
     // Add a song to the graph with it's id (rank)
     function add_to_graph(index) {
 
@@ -279,21 +297,6 @@ function radar_chart(d) {
 
         };
 
-    // creates a select option for each song in the dataset
-    let select = document.getElementById('select_song');
-    for (let i = 0; i< d.length; i++){
-        
-        let option = document.createElement('option');
-        let artist = d[i].artist;
-        let title = d[i].title;
-        
-        // id as option value
-        option.value = i;
-        // title and artit as option label
-        option.innerHTML = `${title} - ${artist}`;
-        
-        select.appendChild(option);
-        }
 
     // add the selected song to the graph
     let song = document.querySelector('#select_song')
@@ -488,8 +491,10 @@ function scatter_plot(d,c) {
                 })
             .on('mouseleave', function(){
                 // Hides the tooltip and puts initial style to the point
-                scat_tooltip.style('opacity', 0);
-                d3.select(this).style('stroke', 'none').style('opacity',0.8)
+                scat_tooltip.style('opacity', 0)
+                    // Moves the tooltip away from the graph to avoid it to block the elements underneath 
+                    .style('left', d3.event.pageX + 1000 + 'px');
+                d3.select(this).style('stroke', 'none').style('opacity',0.8);
                 });
         
         // Creates a label for the x axis with te selected feature 
