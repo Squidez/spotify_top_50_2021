@@ -140,7 +140,7 @@ function color_graph(d) {
                 .style('left', coord.layerX + 1000 + 'px');
             d3.select(this).style('stroke', 'none').style('opacity',0.8);
             })
-        .on('click', function(c){
+        .on('click', function(coord,c){
             // Add the song to the radarchart
             radar_chart(d).add_to_graph(c-1);
             });
@@ -616,6 +616,10 @@ function cor_matrix(c,d) {
                     return '#0a0a0a'
                 } else {
                     return color(c.value)}
+                })
+        .attr('transform', function(c) {
+                if(c.x != c.y){
+                    return 'translate(8,0)'}
                 }); 
     
     // Select the top right half of the graph
@@ -629,5 +633,6 @@ function cor_matrix(c,d) {
         .append('circle')
         .attr('r', function(c) {return size(Math.abs(c.value))})
         .style('fill', function(c) {return color(c.value)})
-        .style('opacity', 0.8);   
+        .style('opacity', 0.8)
+        .attr('transform', 'translate(25,0)');   
 }
