@@ -530,7 +530,6 @@ function cor_matrix(c,d) {
         .attr('height', height+margin.top+margin.bottom)
         .append('g')
         .attr('transform', `translate(${margin.left},${margin.right})`);
-    console.log(c)
     
     // Transforms the data to have an object for each feature couple
     let matrix_data = [];
@@ -545,7 +544,13 @@ function cor_matrix(c,d) {
         }
     });
     
-    let domain = d3.set(matrix_data.map(function(c) {return c.x})).values();
+    // Only keeps the first occurence of a value
+    function unique_values(value, index, self) {
+        return self.indexOf(value) === index;
+      }
+
+    // Filters the values with the function to keep only one occurence
+    let domain = (matrix_data.map(function(c) {return c.x})).filter(unique_values);
 
     // Declaration of colorScale
     let colorScale = manage_colors(d).colorScale;
