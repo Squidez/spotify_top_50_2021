@@ -1,7 +1,5 @@
 
-// Retrieve and declare the main dataset
-d3.csv('spotify_top_2021.csv', function(d) {
-    
+function type(d) {
     return {
         rank: +d.rank,
         title: d.title,
@@ -17,19 +15,19 @@ d3.csv('spotify_top_2021.csv', function(d) {
         acousticness: (+d.acous)/100,
         popularity: (+d.pop)/100
     };
+}
 
-}, function(d) {
-
-    color_graph(d)
-    radar_chart(d)
-
-    // Retrieve and declare the correlation matrix
-    d3.csv('spotify_cor.csv', function(c) {
-        
-        scatter_plot(d,c)
-        cor_matrix(c,d)
-      })
-});
+// Retrieve and declare the main dataset
+d3.csv("spotify_top_2021.csv", type)  
+    .then(function(d) {
+        color_graph(d);
+        radar_chart(d);
+        d3.csv('spotify_cor.csv')
+            .then(function(c) {
+                scatter_plot(d,c);
+                cor_matrix(c,d);
+            })
+    })
 
 // Declaration of the height, width, etc...
 let margin = {top: 10, right: 30, bottom: 30, left: 60},
@@ -129,17 +127,17 @@ function color_graph(d) {
             d3.select(this).style('stroke', 'black').style('opacity', 1);
             d3.select(this).style('cursor', 'pointer');
             })
-        .on('mousemove', function(c){
+        .on('mousemove', function(coord,c){
             // Shows the title and author when the mouse hovers a bar
-            tooltip.html(`${c} - ${d[c-1].title} - ${d[c-1].artist}`)
-                .style('left', d3.event.pageX + 10 + 'px')
-                .style('top', d3.event.pageY - 20 + 'px');
+            tooltip.html(`${c} - ${d[c-1].title} - ${d[c-1].artist}`) //`${c} - ${d[c-1].title} - ${d[c-1].artist}`
+                .style('left', coord.layerX +10+ 'px')
+                .style('top', coord.layerY -20+ 'px');
             })
-        .on('mouseleave', function(){
+        .on('mouseleave', function(coord){
             // Hides the tooltip and puts initial style to the bar
             tooltip.style('opacity', 0)
                 // Moves the tooltip away from the graph to avoid it to block the elements underneath 
-                .style('left', d3.event.pageX + 1000 + 'px');
+                .style('left', coord.layerX + 1000 + 'px');
             d3.select(this).style('stroke', 'none').style('opacity',0.8);
             })
         .on('click', function(c){
@@ -482,18 +480,18 @@ function scatter_plot(d,c) {
                 scat_tooltip.style('opacity', 1);
                 d3.select(this).style('stroke', 'black').style('opacity', 1);
                 })
-            .on('mousemove', function(d){
+            .on('mousemove', function(coord, d){
                 // Shows the title and author when the mouse hovers a point
                 scat_tooltip.html(`${d.title} - ${d.artist}`)
                     // Adjusts the position of the tooltip
-                    .style('left', d3.event.pageX+ 10 + 'px')
-                    .style('top', d3.event.pageY - 25 + 'px');
+                    .style('left', coord.layerX + 10 + 'px')
+                    .style('top', coord.layerY - 25 + 'px');
                 })
-            .on('mouseleave', function(){
+            .on('mouseleave', function(coord){
                 // Hides the tooltip and puts initial style to the point
                 scat_tooltip.style('opacity', 0)
                     // Moves the tooltip away from the graph to avoid it to block the elements underneath 
-                    .style('left', d3.event.pageX + 1000 + 'px');
+                    .style('left', coord.layerX + 1000 + 'px');
                 d3.select(this).style('stroke', 'none').style('opacity',0.8);
                 });
         
